@@ -1,14 +1,12 @@
 package com.earth_pointer.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
-@Setter
-@Getter
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class User {
     private int userId;
     private String username;
@@ -16,5 +14,4 @@ public class User {
     private String email;
     private boolean isVerified;
     private Timestamp registrationDate;
-
 }

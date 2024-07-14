@@ -17,7 +17,7 @@ public class MailService {
         this.mailSender = mailSender;
     }
 
-    public void sendEmailVerification(String email) {
+    public int sendEmailVerification(String email) {
         int verificationCode = generateRandomCode();
 
         SimpleMailMessage message = new SimpleMailMessage();
@@ -27,6 +27,7 @@ public class MailService {
 
         mailSender.send(message);
         System.out.println("이메일을 성공적으로 보냈습니다.");
+        return verificationCode;
     }
 
     private int generateRandomCode() {
