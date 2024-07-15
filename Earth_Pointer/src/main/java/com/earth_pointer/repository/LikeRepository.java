@@ -43,6 +43,7 @@ public class LikeRepository {
         }
     }
 
+    // 좋아요 수 조회
     public int getLikeCountByPostId(int postId) {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -50,8 +51,22 @@ public class LikeRepository {
 
         try {
             conn  = dataSource.getConnection();
-        } catch (Exception e) {
 
+            String sql = "select count(*) as post_per_likes from likes where post_id = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, postId);
+
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("post_per_likes");
+            } else {
+                return 0;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            DatabaseUtils.close(conn, ps, rs);
         }
     }
 
