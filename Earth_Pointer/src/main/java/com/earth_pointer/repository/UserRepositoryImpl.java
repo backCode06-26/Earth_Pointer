@@ -16,10 +16,12 @@ public class UserRepositoryImpl {
 
 
     private final DataSource dataSource;
+    private final DatabaseUtils databaseUtils;
 
     @Autowired
-    public UserRepositoryImpl(DataSource dataSource) {
+    public UserRepositoryImpl(DataSource dataSource, DatabaseUtils databaseUtils) {
         this.dataSource = dataSource;
+        this.databaseUtils = databaseUtils;
     }
 
     public User findByEmail(String email) {
@@ -65,9 +67,8 @@ public class UserRepositoryImpl {
         try {
             conn = dataSource.getConnection();
 
-            // SQL 쿼리에서 컬럼을 명시적으로 지정
             String sql = "insert into users (user_id, username, password_hash, email, is_verified, registration_date) " +
-                         "values (userSeq.nextval, ?, ?, ?, 0, SYSTIMESTAMP)";
+                    "values (userSeq.nextval, ?, ?, ?, 0, SYSTIMESTAMP)";
 
             ps = conn.prepareStatement(sql);
             ps.setString(1, user.getUsername());
@@ -83,6 +84,25 @@ public class UserRepositoryImpl {
         }
     }
 
+    public void validateCode(String email) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = dataSource.getConnection();
+
+            String sql = "update users set is_verified = ? where user_id = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, 1);
+            ps.setString(2, databaseUtils.getUserIdByEmail(email));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            DatabaseUtils.close(conn, ps, rs);
+        }
+    }
+
     public void changePassword(String email, String password) {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -91,10 +111,10 @@ public class UserRepositoryImpl {
         try {
             conn = dataSource.getConnection();
 
-            String sql = "update users set password = ? where email = ?";
+            String sql = "update users set password_hash = ? where user_id = ?";
             ps = conn.prepareStatement(sql);
             ps.setString(1, password);
-            ps.setString(2, email);
+            ps.setString(2, databaseUtils.getUserIdByEmail(email));
 
             ps.executeUpdate();
 

@@ -36,7 +36,7 @@ public class UserFurnitureRepositoryImpl {
                          "values (userFurnitureId.nextVal,?,?)";
 
             ps = conn.prepareStatement(sql);
-            ps.setInt(1, databaseUtils.getUserIdByEmail(email));
+            ps.setString(1, databaseUtils.getUserIdByEmail(email));
             ps.setInt(2, databaseUtils.getFurnitureIdByName(name));
 
             ps.executeUpdate();
@@ -64,7 +64,7 @@ public class UserFurnitureRepositoryImpl {
                          "and uf.user_id = u.user_id " +
                          "and u.user_id = ?";
             ps = conn.prepareStatement(sql);
-            ps.setInt(1, databaseUtils.getUserIdByEmail(email));
+            ps.setString(1, databaseUtils.getUserIdByEmail(email));
 
             rs = ps.executeQuery();
 

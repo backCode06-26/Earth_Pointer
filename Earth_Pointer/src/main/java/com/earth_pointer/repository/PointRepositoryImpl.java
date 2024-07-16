@@ -38,7 +38,7 @@ public class PointRepositoryImpl {
                     "values (pointSeq.nextVal, ?, ?, ?, SYSTIMESTAMP)";
 
             ps = conn.prepareStatement(sql);
-            ps.setInt(1, databaseUtils.getUserIdByEmail(email));
+            ps.setString(1, databaseUtils.getUserIdByEmail(email));
             ps.setInt(2, point);
             ps.setString(3, type.name());
 
@@ -67,7 +67,7 @@ public class PointRepositoryImpl {
                          "and up.user_id = ?";
 
             ps = conn.prepareStatement(sql);
-            ps.setInt(1, databaseUtils.getUserIdByEmail(email));
+            ps.setString(1, databaseUtils.getUserIdByEmail(email));
 
             rs = ps.executeQuery();
 

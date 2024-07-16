@@ -19,20 +19,20 @@ public class DatabaseUtils {
         this.dataSource = dataSource;
     }
 
-    public int getUserIdByEmail(String email) {
+    public String getUserIdByEmail(String email) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
 
         try {
             conn = dataSource.getConnection();
-            String sql = "SELECT user_id FROM users WHERE email = ?";
+            String sql = "select user_id from users where email = ?";
             ps = conn.prepareStatement(sql);
             ps.setString(1, email);
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                return rs.getInt("user_id");
+                return rs.getString("user_id");
             } else {
                 throw new SQLException("사용자를 찾을 수 없습니다.");
             }
