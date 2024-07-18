@@ -1,4 +1,4 @@
-package com.earth_pointer.domain.recyclingInfos;
+package com.earth_pointer.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
