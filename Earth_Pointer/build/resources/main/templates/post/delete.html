@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시물 수정</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css"> <!-- 스타일 시트 추가 가능 -->
+</head>
+<body>
+<h1>게시물 삭제</h1>
+<form th:action="@{/post/delete/{postId}(postId=${postId})}" method="POST">
+    <button type="submit" onclick="handleClick(this)">삭제하기</button>
+</form>
+<script th:src="@{/js/handleButtonClickWithDisable.js}"></script>
+</body>
+</html>

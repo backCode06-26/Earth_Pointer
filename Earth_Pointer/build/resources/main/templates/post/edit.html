@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>게시글 수정</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<h1>게시글 수정</h1>
+<form th:action="@{/post/edit/{postId}(postId=${postId})}" method="POST" th:object="${post}">
+    <label for="title">제목:</label><br>
+    <input type="text" id="title" name="title" th:field="*{title}" /><br>
+    <p class="error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
+
+    <label for="content">내용:</label><br>
+    <textarea id="content" name="content" rows="4" cols="50" th:field="*{content}" required></textarea><br>
+    <p class="error" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
+
+    <button type="submit" onclick="handleClick(this)">수정하기</button>
+</form>
+<script th:src="@{/js/handleButtonClickWithDisable.js}"></script>
+</body>
+</html>

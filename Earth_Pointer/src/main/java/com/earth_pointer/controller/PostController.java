@@ -99,7 +99,7 @@ public class PostController {
     }
 
     // 게시글 페이징
-    @GetMapping("/posts")
+    @GetMapping("/")
     public String getAllPostsWithPaginating(@RequestParam(value = "page", defaultValue = "1") int pageNumber, Model model) {
         int totalPosts = postService.getTotalPosts();
         int page = (int) Math.ceil((double) totalPosts / 10);
@@ -114,6 +114,6 @@ public class PostController {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         int userId = userService.findUserIdByEmail(email);
         Post post = postService.getPostById(postId);
-        return post != null && post.getUserId() == userId;
+        return post.getUserId() == userId;
     }
 }

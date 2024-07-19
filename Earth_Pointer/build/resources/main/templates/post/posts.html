@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th>순법</th>
+        <th>이름</th>
+        <th>내용</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="p : ${posts}">
+        <td th:text="${p.postId}">순법</td>
+        <td>
+            <a th:href="@{/post/{postId}(postId=${p.postId})}" th:text="${p.title}">이름</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div>
+    <ul>
+        <li th:each="i : ${#numbers.sequence(1, page)}">
+            <a th:href="@{/post/posts(page=${i})}" th:text="${i}">Page</a>
+        </li>
+    </ul>
+</div>
+
+</body>
+</html>
