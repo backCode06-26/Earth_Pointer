@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Email</title>
+</head>
+<body>
+    <h1>가입을 완료하기 위해 인증 코드를 입력하세요.</h1>
+    <form th:action="@{/user/certification}" method="post">
+        <input type="hidden" name="username" th:value="${user.username}">
+        <input type="hidden" name="email" th:value="${user.email}">
+        <input type="hidden" name="password" th:value="${user.password}">
+        <input type="hidden" name="certificationCode" th:value="${certificationCode}" />
+        <input type="text" name="inputCode" placeholder="인증 코드 입력" required />
+        <button th:type="submit" onclick="handleClick(this)">인증</button>
+    </form>
+
+    <script th:src="@{/js/handleButtonClickWithDisable.js}"></script>
+</body>
+</html>
