@@ -22,6 +22,9 @@ public class RecyclingQuizRepository {
         this.dataSource = dataSource;
         this.databaseUtils = databaseUtils;
     }
+    
+    // 문제 출제
+
 
     // 문제 제공 (1개)
     public RecyclingQuiz getRecyclingQuiz(int quizId) {
@@ -57,7 +60,7 @@ public class RecyclingQuizRepository {
     }
 
     // 문제 제공 (10개)
-    public ArrayList<RecyclingQuiz> getAllRecyclingQuizWithPagination(int quizId) {
+    public ArrayList<RecyclingQuiz> getAllRecyclingQuizWithPagination(int page) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -66,11 +69,18 @@ public class RecyclingQuizRepository {
         try {
             conn = dataSource.getConnection();
 
-            String sql = "select * from recycling_quiz where quiz_id between ? and ?";
+            int startRow = page*10-9;
+            int endRow = 10*page;
+
+            String sql = "select * from ( " +
+                    "    select ROWNUM NUM, M.* from (" +
+                    "       select * from recycling_quiz order by quiz_id desc" +
+                    "   ) M" +
+                    ") where NUM between ? and ?";
 
             ps = conn.prepareStatement(sql);
-            ps.setInt(1, quizId);
-            ps.setInt(2, quizId+9);
+            ps.setInt(1, startRow);
+            ps.setInt(2, endRow);
 
             rs = ps.executeQuery();
 
@@ -102,12 +112,12 @@ public class RecyclingQuizRepository {
             conn = dataSource.getConnection();
 
             String sql = "insert into user_answer(answer_id, user_id, post_id, is_right, answer_date)"
-                    + "anwser_id.nextVal, ?, ?, ?, SYSTIMESTAMP";
+                    + "answerSeq.nextVal, ?, ?, ?, SYSTIMESTAMP";
 
             ps = conn.prepareStatement(sql);
             ps.setString(1, databaseUtils.getUserIdByEmail(email));
             ps.setInt(2, quizId);
-            ps.setBoolean(2, isRight);
+            ps.setBoolean(3, isRight);
 
             ps.executeUpdate();
 
@@ -117,5 +127,4 @@ public class RecyclingQuizRepository {
             DatabaseUtils.close(conn, ps, rs);
         }
     }
-
 }
