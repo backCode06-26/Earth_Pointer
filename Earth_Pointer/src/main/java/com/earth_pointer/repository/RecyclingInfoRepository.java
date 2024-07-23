@@ -1,6 +1,6 @@
 package com.earth_pointer.repository;
 
-import com.earth_pointer.domain.recyclingInfos.RecyclingInfo;
+import com.earth_pointer.domain.RecyclingInfo;
 import com.earth_pointer.utils.DatabaseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
