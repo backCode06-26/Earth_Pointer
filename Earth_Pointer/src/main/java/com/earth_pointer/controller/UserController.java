@@ -55,9 +55,10 @@ public class UserController {
             model.addAttribute("password", passwordDTO);
             return "index/changePassword";
         }
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        String session = SecurityContextHolder.getContext().getAuthentication().getName();
+        int userId = Integer.parseInt(session);
         String password = passwordEncoder.encode(passwordDTO.getPassword());
-        userService.passwordChange(email, password);
+        userService.passwordChange(userId, password);
         return "redirect:/";
     }
 
@@ -99,10 +100,13 @@ public class UserController {
             try {
                 userService.join(user);
             } catch (RuntimeException e) {
+                System.out.println(e);
                 return "redirect:/user/join";
             }
+            System.out.println(0);
             return "redirect:/";
         } else {
+            System.out.println(1);
             return "redirect:/user/join";
         }
     }
