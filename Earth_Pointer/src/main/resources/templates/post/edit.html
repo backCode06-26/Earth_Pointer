@@ -5,8 +5,9 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
 <body>
+<!-- 이거 postDTO으로 해야함 -->
 <h1>게시글 수정</h1>
-<form th:action="@{/post/edit/{postId}(postId=${postId})}" method="POST" th:object="${post}">
+<form th:action="@{/post/edit/{postId}(postId=${postId})}" method="post" th:object="${post}">
     <label for="title">제목:</label><br>
     <input type="text" id="title" name="title" th:field="*{title}" /><br>
     <p class="error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>

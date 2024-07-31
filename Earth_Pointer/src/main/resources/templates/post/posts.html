@@ -23,10 +23,10 @@
     </tbody>
 </table>
 
-<div>
+<div th:if="${page > 0}">
     <ul>
         <li th:each="i : ${#numbers.sequence(1, page)}">
-            <a th:href="@{/post/posts(page=${i})}" th:text="${i}">Page</a>
+            <a th:href="@{/post/(page=${i})}" th:text="${i}">Page</a>
         </li>
     </ul>
 </div>

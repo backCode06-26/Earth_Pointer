@@ -3,16 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${post.title}">게시글 세부사항</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 </head>
 <body>
 <h1 th:text="${post.title}">게시글 제목</h1>
 <p th:text="${post.content}">게시글 내용</p>
 <p th:text="${post.createdAt}">생성일자</p>
 
-<div>
+<div th:if="${post.userId == userId}">
     <a th:href="@{/post/edit/{postId}(postId=${post.postId})}">수정하기</a>
-    <a th:href="@{/post/delete/{postId}(postId=${post.postId})}">삭제하기</a>
-    <a href="/post/posts">목록으로 돌아가기</a>
+    <button onclick="postDelete()">삭제하기</button>
 </div>
+<div>
+    <a href="/post">목록으로 돌아가기</a>
+</div>
+
+<h1>댓글 추가</h1>
+<div>
+    <label for="content">댓글:</label>
+    <input type="text" id="content" name="content">
+    <button id="commentSubmit" onclick="commentWrite()">댓글 추가</button>
+</div>
+
+<h1>댓글</h1>
+<div>
+    <ul>
+        <li th:each="comment : ${comments}">
+            <p><strong th:text="${comment.username}">댓글 작성자</strong></p>
+            <p th:text="${comment.comment}">댓글 내용</p>
+            <p th:text="${comment.createdAt}">작성일자</p>
+            <div th:id="'hiddenElement' + ${comment.commentId}" style="display: none;">
+                <label for="commentUpdate">수정:</label>
+                <input type="text" id="commentUpdate" name="content">
+                <button th:onclick="'commentUpdate(' + ${comment.commentId} + ')'">제출</button>
+            </div>
+
+            <div th:if="${comment.userId == userId}">
+                <button th:onclick="'showElement(\'hiddenElement' + ${comment.commentId} + '\')'">수정</button>
+                <button th:onclick="'commentDelete(' + ${comment.commentId} + ')'">삭제</button>
+            </div>
+        </li>
+    </ul>
+    <p th:if="${#lists.isEmpty(comments)}">댓글이 없습니다.</p>
+</div>
+
+<script th:inline="javascript">
+    const postId = /*[[${post.postId}]]*/ 0;
+
+    const commentWrite = () => {
+        const content = document.getElementById("content").value;
+        $.ajax({
+            type : "post",
+            url : "/comment/save",
+            data : {
+                comment : content,
+                postId : postId
+            },
+            success: function (res) {
+                console.log("요청 성공", res);
+                window.location.reload();
+            },
+            error: function (err) {
+                console.log("요청 실패", err);
+            }
+        });
+    }
+
+    const postDelete = () => {
+        if (confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
+            $.ajax({
+                type: 'DELETE',
+                url: `/post/delete/${postId}`,
+                success: function (res) {
+                    alert('게시글이 삭제되었습니다.');
+                    window.location.href = '/post';
+                },
+                error: function (err) {
+                    if (err.status === 401) {
+                        alert('삭제 권한이 없습니다.');
+                    } else {
+                        alert('게시글 삭제에 실패했습니다.');
+                    }
+                }
+            });
+        }
+    }
+
+    const commentDelete = (commentId) => {
+        if (confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
+            $.ajax({
+                type: 'DELETE',
+                url: `/comment/delete/${commentId}`,
+                success: function (res) {
+                    alert('댓글이 삭제되었습니다.');
+                    window.location.reload();
+                },
+                error: function (err) {
+                    if (err.status === 401) {
+                        alert('삭제 권한이 없습니다.');
+                    } else {
+                        alert('댓글 삭제에 실패했습니다.');
+                    }
+                }
+            });
+        }
+    }
+
+    const commentUpdate = (commentId) => {
+        const content = document.getElementById("commentUpdate").value;
+        if (confirm('정말로 이 댓글을 수정하시겠습니까?')) {
+            $.ajax({
+                type: 'PUT',
+                url: `/comment/update/${commentId}`,
+                data: {
+                    comment: content
+                },
+                success: function (res) {
+                    alert('댓글이 수정되었습니다.');
+                    window.location.reload();
+                },
+                error: function (err) {
+                    if (err.status === 401) {
+                        alert('삭제 권한이 없습니다.');
+                    } else {
+                        alert('댓글 삭제에 실패했습니다.');
+                    }
+                }
+            });
+        }
+    }
+
+    const showElement = (id) => {
+        const element = document.getElementById(id);
+        if (element.style.display === 'none') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
 </body>
 </html>
